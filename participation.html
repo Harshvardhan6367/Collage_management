@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Event Portal - Student Participation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark-color);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-header h3 {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .header h2 {
+            color: var(--dark-color);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        /* Participation Management Styles */
+        .participation-management {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h3 {
+            color: var(--dark-color);
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        /* Filter Controls */
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .filter-control {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        /* Participation Table */
+        .participation-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .participation-table th, .participation-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .participation-table th {
+            background-color: #f9f9f9;
+            font-weight: 600;
+        }
+        
+        .participation-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge.registered {
+            background-color: #d4e6f7;
+            color: var(--primary-color);
+        }
+        
+        .badge.attended {
+            background-color: #d5f5e3;
+            color: var(--success-color);
+        }
+        
+        .badge.absent {
+            background-color: #fadbd8;
+            color: var(--accent-color);
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+        
+        .view-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .certificate-btn {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .participation-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>College Event Portal</h3>
+                <p>Teacher Dashboard</p>
+            </div>
+            
+            <div class="sidebar-menu">
+                <ul>
+                    <li><a href="teacher-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="events.html"><i class="fas fa-calendar-alt"></i> Manage Events</a></li>
+                    <li><a href="#" class="active"><i class="fas fa-users"></i> Student Participation</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="Login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h2>Student Participation</h2>
+                <div class="user-info">
+                    <img src="001vp0.png" alt="User">
+                    <span>Dr. Praveen Agrawal</span>
+                </div>
+            </div>
+            
+            <div class="participation-management">
+                <div class="section-header">
+                    <h3>Event Participation Records</h3>
+                    <div>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Filter Controls -->
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="eventFilter">Event</label>
+                        <select id="eventFilter" class="filter-control">
+                            <option value="">All Events</option>
+                            <option value="science-fair">Annual Science Fair</option>
+                            <option value="coding-comp">Coding Competition</option>
+                            <option value="cultural-fest">Cultural Fest</option>
+                            <option value="ai-lecture">Guest Lecture - AI Trends</option>
+                            <option value="sports">Sports Tournament</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="statusFilter">Participation Status</label>
+                        <select id="statusFilter" class="filter-control">
+                            <option value="">All Statuses</option>
+                            <option value="registered">Registered</option>
+                            <option value="attended">Attended</option>
+                            <option value="absent">Absent</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="dateFilter">Date Range</label>
+                        <select id="dateFilter" class="filter-control">
+                            <option value="">All Dates</option>
+                            <option value="this-week">This Week</option>
+                            <option value="this-month">This Month</option>
+                            <option value="last-month">Last Month</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="search">Search Students</label>
+                        <input type="text" id="search" class="filter-control" placeholder="Name, ID, or Email">
+                    </div>
+                </div>
+                
+                <!-- Participation Table -->
+                <table class="participation-table">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Student ID</th>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center;">
+                                    <img src="https://via.placeholder.com/40" alt="Student" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                                    Harshvardhan Singh Rajawat
+                                </div>
+                            </td>
+                            <td>24AI023</td>
+                            <td>Annual Science Fair</td>
+                            <td>June 15, 2025</td>
+                            <td><span class="badge registered">Registered</span></td>
+                            <td>
+                                <button class="action-btn view-btn"><i class="fas fa-eye"></i> View</button>
+                                <button class="action-btn certificate-btn"><i class="fas fa-certificate"></i> Certificate</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center;">
+                                    <img src="https://via.placeholder.com/40" alt="Student" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                                    Komal goyal
+                                </div>
+                            </td>
+                            <td>24CS054</td>
+                            <td>Coding Competition</td>
+                            <td>May 10, 2025</td>
+                            <td><span class="badge attended">Attended</span></td>
+                            <td>
+                                <button class="action-btn view-btn"><i class="fas fa-eye"></i> View</button>
+                                <button class="action-btn certificate-btn"><i class="fas fa-certificate"></i> Certificate</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center;">
+                                    <img src="https://via.placeholder.com/40" alt="Student" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                                    Devanshu Meena
+                                </div>
+                            </td>
+                            <td>24AI015</td>
+                            <td>Cultural Fest</td>
+                            <td>Apr 28, 2025</td>
+                            <td><span class="badge absent">Absent</span></td>
+                            <td>
+                                <button class="action-btn view-btn"><i class="fas fa-eye"></i> View</button>
+                                <button class="action-btn certificate-btn" disabled><i class="fas fa-certificate"></i> Certificate</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center;">
+                                    <img src="https://via.placeholder.com/40" alt="Student" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                                    Kailash mahawar
+                                </div>
+                            </td>
+                            <td>24AI024</td>
+                            <td>Guest Lecture - AI Trends</td>
+                            <td>Apr 20, 2025</td>
+                            <td><span class="badge attended">Attended</span></td>
+                            <td>
+                                <button class="action-btn view-btn"><i class="fas fa-eye"></i> View</button>
+                                <button class="action-btn certificate-btn"><i class="fas fa-certificate"></i> Certificate</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center;">
+                                    <img src="https://via.placeholder.com/40" alt="Student" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                                    Lakshay jain
+                                </div>
+                            </td>
+                            <td>24CS058</td>
+                            <td>Sports Tournament</td>
+                            <td>May 5, 2025</td>
+                            <td><span class="badge registered">Registered</span></td>
+                            <td>
+                                <button class="action-btn view-btn"><i class="fas fa-eye"></i> View</button>
+                                <button class="action-btn certificate-btn" disabled><i class="fas fa-certificate"></i> Certificate</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- Pagination -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                    <div>Showing 1 to 5 of 25 entries</div>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn btn-secondary" disabled><i class="fas fa-chevron-left"></i> Previous</button>
+                        <button class="btn btn-primary">1</button>
+                        <button class="btn btn-secondary">2</button>
+                        <button class="btn btn-secondary">3</button>
+                        <button class="btn btn-secondary">4</button>
+                        <button class="btn btn-secondary">5</button>
+                        <button class="btn btn-secondary">Next <i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Student Participation JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filter functionality
+            const eventFilter = document.getElementById('eventFilter');
+            const statusFilter = document.getElementById('statusFilter');
+            const dateFilter = document.getElementById('dateFilter');
+            const searchInput = document.getElementById('search');
+            
+            // Add event listeners for filtering
+            [eventFilter, statusFilter, dateFilter, searchInput].forEach(filter => {
+                filter.addEventListener('change', applyFilters);
+            });
+            searchInput.addEventListener('input', applyFilters);
+            
+            // View button click
+            const viewButtons = document.querySelectorAll('.view-btn');
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const studentName = row.cells[0].textContent.trim();
+                    const eventName = row.cells[2].textContent.trim();
+                    alert(`Viewing details for ${studentName}'s participation in ${eventName}`);
+                });
+            });
+            
+            // Certificate button click
+            const certButtons = document.querySelectorAll('.certificate-btn:not(:disabled)');
+            certButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const studentName = row.cells[0].textContent.trim();
+                    const eventName = row.cells[2].textContent.trim();
+                    alert(`Generating certificate for ${studentName} for ${eventName}`);
+                });
+            });
+        });
+        
+        function applyFilters() {
+            // In a real app, this would filter the table rows based on the filter values
+            console.log('Applying filters...');
+            // This is just a demo - in reality you would filter the table data
+        }
+    </script>
+</body>
+</html>

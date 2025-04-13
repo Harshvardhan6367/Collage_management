@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | ANAND ICE Student Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066cc;
+            --secondary: #004080;
+            --accent: #ff6600;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --white: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            height: 40px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 15px;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 250px;
+            height: calc(100vh - 70px);
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 1.5rem 0;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .menu-item i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 70px;
+            padding: 2rem;
+            min-height: calc(100vh - 70px);
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .profile-container {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .profile-sidebar {
+            width: 300px;
+        }
+
+        .profile-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-picture {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid rgba(0, 102, 204, 0.1);
+            margin: 0 auto;
+        }
+
+        .upload-btn {
+            display: block;
+            margin-top: 1rem;
+            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .profile-info {
+            text-align: center;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-id {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .profile-batch {
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-item p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .profile-content {
+            flex: 1;
+        }
+
+        .profile-section {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title-sm {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .edit-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            margin-bottom: 1rem;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-value {
+            font-weight: 500;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .skill-tag {
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--primary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 5px;
+            width: 2px;
+            background-color: #eee;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -1.5rem;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--primary);
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .timeline-description {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .menu-item span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .profile-container {
+                flex-direction: column;
+            }
+
+            .profile-sidebar {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                margin-top: 70px;
+            }
+
+            .main-content {
+                margin-left: 0;
+                margin-top: 0;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="https://www.educatly.com/_next/image?url=https://api.educatly.com//rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBNDRSQmc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--56258a48752c8a1073b4495eef6fe6c4951292b8/anand_international_college_of_engineering_profile&w=3840&q=75" 
+             alt="ANAND ICE Logo" class="logo">
+        <div class="user-profile">
+            <div class="user-avatar">HV</div>
+            <span class="user-name" id="student-name-display">Harsh Vardhan</span>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="menu-item" onclick="window.location.href='student-dashboard.html'">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-events.html'">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Events</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-participations.html'">
+                <i class="fas fa-trophy"></i>
+                <span>My Participations</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-certificates.html'">
+                <i class="fas fa-certificate"></i>
+                <span>Certificates</span>
+            </li>
+            <li class="menu-item active">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-settings.html'">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="profile-header">
+            <h1 class="section-title">My Profile</h1>
+            <button class="btn btn-primary">
+                <i class="fas fa-download"></i> Download Profile
+            </button>
+        </div>
+
+        <div class="profile-container">
+            <div class="profile-sidebar">
+                <div class="profile-card">
+                    <div class="profile-picture">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80" 
+                             alt="Profile Picture" class="profile-avatar">
+                        <label for="upload-photo" class="upload-btn">
+                            <i class="fas fa-camera"></i> Change Photo
+                        </label>
+                        <input type="file" id="upload-photo" style="display: none;">
+                    </div>
+                    <div class="profile-info">
+                        <h2 class="profile-name" id="profile-name">Harsh Vardhan</h2>
+                        <div class="profile-id" id="profile-id">S2023001</div>
+                        <span class="profile-batch">Batch 2023-2027</span>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <h3>24</h3>
+                                <p>Events</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>8</h3>
+                                <p>Awards</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>15</h3>
+                                <p>Certificates</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="section-header">
+                        <h3 class="section-title-sm">Contact Info</h3>
+                        <button class="edit-btn">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div class="info-value" id="profile-email">harsh.vardhan@anandice.edu</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Phone</div>
+                            <div class="info-value" id="profile-phone">+91 9876543210</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Address</div>
+                            <div class="info-value" id="profile-address">123 College St, Jaipur</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Birth Date</div>
+                            <div class="info-value" id="profile-dob">15 June 2002</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-content">
+                <div class="profile-section">
+                    <div class="section-header">
+                        <h3 class="section-title-sm">Academic Information</h3>
+                        <button class="edit-btn">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Department</div>
+                            <div class="info-value" id="profile-dept">Computer Science & Engineering</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Program</div>
+                            <div class="info-value" id="profile-program">B.Tech</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Semester</div>
+                            <div class="info-value" id="profile-semester">5th</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Roll Number</div>
+                            <div class="info-value" id="profile-roll">CS-23-45</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">CGPA</div>
+                            <div class="info-value" id="profile-cgpa">8.7</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Attendance</div>
+                            <div class="info-value" id="profile-attendance">92%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="section-header">
+                        <h3 class="section-title-sm">Skills & Interests</h3>
+                        <button class="edit-btn">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Technical Skills</div>
+                        <div class="skills-container">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">Machine Learning</span>
+                            <span class="skill-tag">Web Development</span>
+                            <span class="skill-tag">Database</span>
+                        </div>
+                    </div>
+                    <div class="info-item" style="margin-top: 1.5rem;">
+                        <div class="info-label">Interests</div>
+                        <div class="skills-container">
+                            <span class="skill-tag">AI Research</span>
+                            <span class="skill-tag">Competitive Programming</span>
+                            <span class="skill-tag">Robotics</span>
+                            <span class="skill-tag">Photography</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="section-header">
+                        <h3 class="section-title-sm">Achievements</h3>
+                        <button class="edit-btn">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-date">December 2025</div>
+                            <h4 class="timeline-title">1st Prize - Dance Competition</h4>
+                            <p class="timeline-description">
+                                Won first prize in inter-college cultural fest dance competition representing ANAND ICE.
+                            </p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-date">November 2025</div>
+                            <h4 class="timeline-title">Hackathon Finalist</h4>
+                            <p class="timeline-description">
+                                Reached finals in 24-hour hackathon with project "AI-based Waste Management System".
+                            </p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-date">October 2025</div>
+                            <h4 class="timeline-title">Best Paper Award</h4>
+                            <p class="timeline-description">
+                                Received best paper award at National CS Conference for research on ML algorithms.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Display student information from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentName = localStorage.getItem('studentName') || 'Student';
+            const studentId = localStorage.getItem('studentId') || 'S000000';
+            
+            // Update profile information
+            document.getElementById('student-name-display').textContent = studentName;
+            document.getElementById('profile-name').textContent = studentName;
+            document.getElementById('profile-id').textContent = studentId;
+            
+            // Check if user is actually a student
+            if(localStorage.getItem('isStudent') !== 'true') {
+                alert('Access denied. Please login as student.');
+                window.location.href = 'index.html';
+            }
+
+            // Photo upload functionality
+            document.getElementById('upload-photo').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.querySelector('.profile-avatar').src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Download profile handler
+            document.querySelector('.btn-primary').addEventListener('click', function() {
+                alert('Profile download would be initiated in a real application');
+            });
+
+            // Edit button handlers
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const section = this.closest('.profile-section') || this.closest('.profile-card');
+                    alert(`Edit functionality for "${section.querySelector('.section-title-sm').textContent}" would be enabled in a real application`);
+                });
+            });
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('isStudent');
+            localStorage.removeItem('studentId');
+            localStorage.removeItem('studentName');
+            window.location.href = 'index.html';
+        }
+
+        // Menu item click handler
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                if (this.classList.contains('active')) return;
+                
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | ANAND ICE Student Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066cc;
+            --secondary: #004080;
+            --accent: #ff6600;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --white: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            height: 40px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 15px;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 250px;
+            height: calc(100vh - 70px);
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 1.5rem 0;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .menu-item i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 70px;
+            padding: 2rem;
+            min-height: calc(100vh - 70px);
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .settings-container {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .settings-sidebar {
+            width: 250px;
+        }
+
+        .settings-nav {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .settings-nav-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .settings-nav-item:hover, .settings-nav-item.active {
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .settings-nav-item i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        .settings-content {
+            flex: 1;
+        }
+
+        .settings-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+            outline: none;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            background-color: var(--white);
+            cursor: pointer;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .form-check-label {
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(0, 102, 204, 0.1);
+        }
+
+        .danger-zone {
+            border-top: 1px solid #ffcccc;
+            margin-top: 2rem;
+            padding-top: 2rem;
+        }
+
+        .danger-title {
+            color: #dc3545;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .danger-text {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .toggle-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .menu-item span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .settings-container {
+                flex-direction: column;
+            }
+
+            .settings-sidebar {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                margin-top: 70px;
+            }
+
+            .main-content {
+                margin-left: 0;
+                margin-top: 0;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="https://www.educatly.com/_next/image?url=https://api.educatly.com//rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBNDRSQmc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--56258a48752c8a1073b4495eef6fe6c4951292b8/anand_international_college_of_engineering_profile&w=3840&q=75" 
+             alt="ANAND ICE Logo" class="logo">
+        <div class="user-profile">
+            <div class="user-avatar">HV</div>
+            <span class="user-name" id="student-name-display">Harsh Vardhan</span>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="menu-item" onclick="window.location.href='student-dashboard.html'">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-events.html'">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Events</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-participations.html'">
+                <i class="fas fa-trophy"></i>
+                <span>My Participations</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-certificates.html'">
+                <i class="fas fa-certificate"></i>
+                <span>Certificates</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-profile.html'">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </li>
+            <li class="menu-item active">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="settings-header">
+            <h1 class="section-title">Account Settings</h1>
+        </div>
+
+        <div class="settings-container">
+            <div class="settings-sidebar">
+                <div class="settings-nav">
+                    <div class="settings-nav-item active" onclick="showSettingsTab('account')">
+                        <i class="fas fa-user-cog"></i>
+                        <span>Account Settings</span>
+                    </div>
+                    <div class="settings-nav-item" onclick="showSettingsTab('security')">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Security</span>
+                    </div>
+                    <div class="settings-nav-item" onclick="showSettingsTab('notifications')">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                    </div>
+                    <div class="settings-nav-item" onclick="showSettingsTab('privacy')">
+                        <i class="fas fa-lock"></i>
+                        <span>Privacy</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-content">
+                <!-- Account Settings Tab -->
+                <div class="settings-tab active" id="account-tab">
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Personal Information</h2>
+                        </div>
+                        <form id="personal-info-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" class="form-control" value="Harsh" id="first-name">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" value="Vardhan" id="last-name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control" value="harsh.vardhan@anandice.edu" id="email">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" value="+91 9876543210" id="phone">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" value="2002-06-15" id="dob">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Address</label>
+                                <textarea class="form-control" id="address" rows="3">123 College St, Jaipur</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Academic Information</h2>
+                        </div>
+                        <form id="academic-info-form">
+                            <div class="form-group">
+                                <label class="form-label">Department</label>
+                                <select class="form-select" id="department">
+                                    <option value="cse">Computer Science & Engineering</option>
+                                    <option value="ece">Electronics & Communication</option>
+                                    <option value="mech">Mechanical Engineering</option>
+                                    <option value="civil">Civil Engineering</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Program</label>
+                                    <select class="form-select" id="program">
+                                        <option value="btech">B.Tech</option>
+                                        <option value="mtech">M.Tech</option>
+                                        <option value="mba">MBA</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Semester</label>
+                                    <select class="form-select" id="semester">
+                                        <option value="1">1st Semester</option>
+                                        <option value="2">2nd Semester</option>
+                                        <option value="3">3rd Semester</option>
+                                        <option value="4">4th Semester</option>
+                                        <option value="5" selected>5th Semester</option>
+                                        <option value="6">6th Semester</option>
+                                        <option value="7">7th Semester</option>
+                                        <option value="8">8th Semester</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Security Tab -->
+                <div class="settings-tab" id="security-tab">
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Change Password</h2>
+                        </div>
+                        <form id="change-password-form">
+                            <div class="form-group">
+                                <label class="form-label">Current Password</label>
+                                <div class="password-toggle">
+                                    <input type="password" class="form-control" id="current-password">
+                                    <i class="fas fa-eye toggle-icon" onclick="togglePassword('current-password', this)"></i>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">New Password</label>
+                                <div class="password-toggle">
+                                    <input type="password" class="form-control" id="new-password">
+                                    <i class="fas fa-eye toggle-icon" onclick="togglePassword('new-password', this)"></i>
+                                </div>
+                                <small class="text-muted">Minimum 8 characters with at least 1 number and 1 special character</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Confirm New Password</label>
+                                <div class="password-toggle">
+                                    <input type="password" class="form-control" id="confirm-password">
+                                    <i class="fas fa-eye toggle-icon" onclick="togglePassword('confirm-password', this)"></i>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Password</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Two-Factor Authentication</h2>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="2fa-toggle">
+                                <label class="form-check-label" for="2fa-toggle">Enable Two-Factor Authentication</label>
+                            </div>
+                            <p class="text-muted">Add an extra layer of security to your account</p>
+                        </div>
+                        <button class="btn btn-outline">Set Up Authenticator App</button>
+                    </div>
+                </div>
+
+                <!-- Notifications Tab -->
+                <div class="settings-tab" id="notifications-tab">
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Notification Preferences</h2>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="email-notifications" checked>
+                                <label class="form-check-label" for="email-notifications">Email Notifications</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="sms-notifications">
+                                <label class="form-check-label" for="sms-notifications">SMS Notifications</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="push-notifications" checked>
+                                <label class="form-check-label" for="push-notifications">Push Notifications</label>
+                            </div>
+                        </div>
+                        <h3 style="margin: 1.5rem 0 1rem;">Notification Types</h3>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="event-reminders" checked>
+                                <label class="form-check-label" for="event-reminders">Event Reminders</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="certificate-updates" checked>
+                                <label class="form-check-label" for="certificate-updates">Certificate Updates</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="academic-updates">
+                                <label class="form-check-label" for="academic-updates">Academic Updates</label>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary">Save Preferences</button>
+                    </div>
+                </div>
+
+                <!-- Privacy Tab -->
+                <div class="settings-tab" id="privacy-tab">
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Privacy Settings</h2>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Profile Visibility</label>
+                            <select class="form-select" id="profile-visibility">
+                                <option value="public">Public (Visible to everyone)</option>
+                                <option value="college" selected>College Only (Visible to ANAND ICE community)</option>
+                                <option value="private">Private (Visible only to you)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="show-achievements" checked>
+                                <label class="form-check-label" for="show-achievements">Show My Achievements</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="show-participations" checked>
+                                <label class="form-check-label" for="show-participations">Show My Event Participations</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="show-certificates">
+                                <label class="form-check-label" for="show-certificates">Show My Certificates</label>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary">Save Privacy Settings</button>
+                    </div>
+
+                    <div class="settings-card danger-zone">
+                        <h2 class="danger-title">Danger Zone</h2>
+                        <p class="danger-text">These actions are irreversible. Please proceed with caution.</p>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-outline" style="color: #dc3545; border-color: #dc3545;" onclick="confirmDeactivate()">
+                                <i class="fas fa-user-slash"></i> Deactivate Account
+                            </button>
+                            <small class="text-muted">Temporarily disable your account</small>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-outline" style="color: #dc3545; border-color: #dc3545;" onclick="confirmDelete()">
+                                <i class="fas fa-trash-alt"></i> Delete Account Permanently
+                            </button>
+                            <small class="text-muted">This cannot be undone and will erase all your data</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Display student information from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentName = localStorage.getItem('studentName') || 'Student';
+            document.getElementById('student-name-display').textContent = studentName;
+            
+            // Check if user is actually a student
+            if(localStorage.getItem('isStudent') !== 'true') {
+                alert('Access denied. Please login as student.');
+                window.location.href = 'index.html';
+            }
+
+            // Form submission handlers
+            document.getElementById('personal-info-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Personal information updated successfully');
+            });
+
+            document.getElementById('academic-info-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Academic information updated successfully');
+            });
+
+            document.getElementById('change-password-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const currentPass = document.getElementById('current-password').value;
+                const newPass = document.getElementById('new-password').value;
+                const confirmPass = document.getElementById('confirm-password').value;
+                
+                if (newPass !== confirmPass) {
+                    alert('New passwords do not match');
+                    return;
+                }
+                
+                if (newPass.length < 8 || !/\d/.test(newPass) || !/[!@#$%^&*]/.test(newPass)) {
+                    alert('Password must be at least 8 characters with at least 1 number and 1 special character');
+                    return;
+                }
+                
+                alert('Password changed successfully');
+                document.getElementById('change-password-form').reset();
+            });
+        });
+
+        // Show settings tab
+        function showSettingsTab(tabId) {
+            // Update active nav item
+            const navItems = document.querySelectorAll('.settings-nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Show the selected tab
+            const tabs = document.querySelectorAll('.settings-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+        }
+
+        // Toggle password visibility
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Account actions
+        function confirmDeactivate() {
+            if (confirm('Are you sure you want to deactivate your account? You can reactivate it by logging in again.')) {
+                alert('Account deactivation would be processed in a real application');
+            }
+        }
+
+        function confirmDelete() {
+            if (confirm('WARNING: This will permanently delete your account and all associated data. This action cannot be undone. Are you sure?')) {
+                if (prompt('Type "DELETE" to confirm permanent account deletion:') === 'DELETE') {
+                    alert('Account deletion would be processed in a real application');
+                    // In a real app, this would log the user out and delete their account
+                    // logout();
+                }
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('isStudent');
+            localStorage.removeItem('studentId');
+            localStorage.removeItem('studentName');
+            window.location.href = 'index.html';
+        }
+
+        // Menu item click handler
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                if (this.classList.contains('active')) return;
+                
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Event Portal - Manage Events</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark-color);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-header h3 {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .header h2 {
+            color: var(--dark-color);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        /* Event Management Styles */
+        .event-management {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h3 {
+            color: var(--dark-color);
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        /* Event Table */
+        .event-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .event-table th, .event-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .event-table th {
+            background-color: #f9f9f9;
+            font-weight: 600;
+        }
+        
+        .event-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status.upcoming {
+            background-color: #d4e6f7;
+            color: var(--primary-color);
+        }
+        
+        .status.ongoing {
+            background-color: #d5f5e3;
+            color: var(--success-color);
+        }
+        
+        .status.completed {
+            background-color: #fadbd8;
+            color: var(--accent-color);
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+        
+        .edit-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .delete-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-header h3 {
+            color: var(--dark-color);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .event-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>College Event Portal</h3>
+                <p>Teacher Dashboard</p>
+            </div>
+            
+            <div class="sidebar-menu">
+                <ul>
+                    <li><a href="teacher-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#class="active"><i class="fas fa-calendar-alt"></i> Manage Events</a></li>
+                    <li><a href="participation.html"><i class="fas fa-users"></i> Student Participation</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="Login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h2>Manage Events</h2>
+                <div class="user-info">
+                    <img src="001vp0.png" alt="User">
+                    <span>Dr. Praveen Agrawal</span>
+                </div>
+            </div>
+            
+            <div class="event-management">
+                <div class="section-header">
+                    <h3>All Events</h3>
+                    <button id="addEventBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add New Event
+                    </button>
+                </div>
+                
+                <table class="event-table">
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Venue</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Annual Science Fair</td>
+                            <td>May 15, 2025</td>
+                            <td>10:00 AM</td>
+                            <td>Main Auditorium</td>
+                            <td><span class="status upcoming">Upcoming</span></td>
+                            <td>
+                                <button class="action-btn edit-btn" onclick="openEditModal()"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn delete-btn" onclick="deleteEvent(this)"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Coding Competition</td>
+                            <td>May 10, 2025</td>
+                            <td>9:00 AM</td>
+                            <td>Computer Lab</td>
+                            <td><span class="status ongoing">Ongoing</span></td>
+                            <td>
+                                <button class="action-btn edit-btn" onclick="openEditModal()"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn delete-btn" onclick="deleteEvent(this)"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Cultural Fest</td>
+                            <td>Apr 28, 2025</td>
+                            <td>11:00 AM</td>
+                            <td>College Ground</td>
+                            <td><span class="status completed">Completed</span></td>
+                            <td>
+                                <button class="action-btn edit-btn" onclick="openEditModal()"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn delete-btn" onclick="deleteEvent(this)"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Guest Lecture - AI Trends</td>
+                            <td>Apr 20, 2025</td>
+                            <td>2:00 PM</td>
+                            <td>Seminar Hall</td>
+                            <td><span class="status completed">Completed</span></td>
+                            <td>
+                                <button class="action-btn edit-btn" onclick="openEditModal()"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn delete-btn" onclick="deleteEvent(this)"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Sports Tournament</td>
+                            <td>May 5, 2025</td>
+                            <td>8:00 AM</td>
+                            <td>Sports Complex</td>
+                            <td><span class="status upcoming">Upcoming</span></td>
+                            <td>
+                                <button class="action-btn edit-btn" onclick="openEditModal()"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn delete-btn" onclick="deleteEvent(this)"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Event Modal -->
+    <div id="addEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Event</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="eventForm">
+                <div class="form-group">
+                    <label for="eventName">Event Name</label>
+                    <input type="text" id="eventName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Date</label>
+                    <input type="date" id="eventDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventTime">Time</label>
+                    <input type="time" id="eventTime" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventVenue">Venue</label>
+                    <input type="text" id="eventVenue" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Description</label>
+                    <textarea id="eventDescription" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="eventOrganizer">Organizer</label>
+                    <input type="text" id="eventOrganizer" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventStatus">Status</label>
+                    <select id="eventStatus" class="form-control" required>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="ongoing">Ongoing</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Edit Event Modal -->
+    <div id="editEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Event</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="editEventForm">
+                <div class="form-group">
+                    <label for="editEventName">Event Name</label>
+                    <input type="text" id="editEventName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEventDate">Date</label>
+                    <input type="date" id="editEventDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEventTime">Time</label>
+                    <input type="time" id="editEventTime" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEventVenue">Venue</label>
+                    <input type="text" id="editEventVenue" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEventDescription">Description</label>
+                    <textarea id="editEventDescription" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editEventOrganizer">Organizer</label>
+                    <input type="text" id="editEventOrganizer" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEventStatus">Status</label>
+                    <select id="editEventStatus" class="form-control" required>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="ongoing">Ongoing</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Event Management JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add Event Modal
+            const addEventBtn = document.getElementById('addEventBtn');
+            const addEventModal = document.getElementById('addEventModal');
+            const eventForm = document.getElementById('eventForm');
+            
+            addEventBtn.addEventListener('click', function() {
+                addEventModal.style.display = 'flex';
+            });
+            
+            // Edit Event Modal
+            const editEventModal = document.getElementById('editEventModal');
+            const editEventForm = document.getElementById('editEventForm');
+            
+            // Close Modal
+            window.addEventListener('click', function(event) {
+                if (event.target === addEventModal) {
+                    addEventModal.style.display = 'none';
+                }
+                if (event.target === editEventModal) {
+                    editEventModal.style.display = 'none';
+                }
+            });
+            
+            // Form Submission
+            eventForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                addNewEvent();
+                closeModal();
+            });
+            
+            editEventForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                updateEvent();
+                closeModal();
+            });
+        });
+        
+        function openEditModal() {
+            // In a real app, you would populate the form with the event data
+            document.getElementById('editEventModal').style.display = 'flex';
+            
+            // Example data - in reality, you'd get this from the clicked row
+            document.getElementById('editEventName').value = 'Annual Science Fair';
+            document.getElementById('editEventDate').value = '2023-05-15';
+            document.getElementById('editEventTime').value = '10:00';
+            document.getElementById('editEventVenue').value = 'Main Auditorium';
+            document.getElementById('editEventDescription').value = 'Annual science fair showcasing student projects';
+            document.getElementById('editEventOrganizer').value = 'Science Department';
+            document.getElementById('editEventStatus').value = 'upcoming';
+        }
+        
+        function closeModal() {
+            document.getElementById('addEventModal').style.display = 'none';
+            document.getElementById('editEventModal').style.display = 'none';
+            document.getElementById('eventForm').reset();
+        }
+        
+        function addNewEvent() {
+            const name = document.getElementById('eventName').value;
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+            const venue = document.getElementById('eventVenue').value;
+            const status = document.getElementById('eventStatus').value;
+            
+            const formattedDate = new Date(date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+            
+            const table = document.querySelector('.event-table tbody');
+            const newRow = table.insertRow(0);
+            
+            newRow.innerHTML = `
+                <td>${name}</td>
+                <td>${formattedDate}</td>
+                <td>${time}</td>
+                <td>${venue}</td>
+                <td><span class="status ${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
+                <td>
+                    <button class="action-btn edit-btn" onclick="openEditModal()"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete-btn" onclick="deleteEvent(this)"><i class="fas fa-trash"></i></button>
+                </td>
+            `;
+            
+            alert('Event added successfully!');
+        }
+        
+        function updateEvent() {
+            alert('Event updated successfully! (In a real app, this would update the event in the table)');
+        }
+        
+        function deleteEvent(button) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                const row = button.closest('tr');
+                row.style.opacity = '0';
+                setTimeout(() => {
+                    row.remove();
+                    alert('Event deleted successfully!');
+                }, 300);
+            }
+        }
+    </script>
+</body>
+</html>

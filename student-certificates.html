@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Certificates | ANAND ICE Student Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066cc;
+            --secondary: #004080;
+            --accent: #ff6600;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --white: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            height: 40px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 15px;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 250px;
+            height: calc(100vh - 70px);
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 1.5rem 0;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .menu-item i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 70px;
+            padding: 2rem;
+            min-height: calc(100vh - 70px);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .search-bar {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 40px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .certificates-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .certificate-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s;
+            border: 1px solid #eee;
+        }
+
+        .certificate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .certificate-preview {
+            height: 200px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .certificate-border {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .certificate-content {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .certificate-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .certificate-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .certificate-type {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .certificate-details {
+            padding: 1.5rem;
+        }
+
+        .certificate-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .certificate-event {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .certificate-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .certificate-meta i {
+            margin-right: 5px;
+        }
+
+        .certificate-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(0, 102, 204, 0.1);
+        }
+
+        .no-certificates {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .no-certificates i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+
+        .no-certificates p {
+            margin-bottom: 1.5rem;
+        }
+
+        .explore-events {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .menu-item span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                margin-top: 70px;
+            }
+
+            .main-content {
+                margin-left: 0;
+                margin-top: 0;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .filter-controls {
+                flex-wrap: wrap;
+            }
+
+            .certificates-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="https://www.educatly.com/_next/image?url=https://api.educatly.com//rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBNDRSQmc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--56258a48752c8a1073b4495eef6fe6c4951292b8/anand_international_college_of_engineering_profile&w=3840&q=75" 
+             alt="ANAND ICE Logo" class="logo">
+        <div class="user-profile">
+            <div class="user-avatar">HV</div>
+            <span class="user-name" id="student-name-display">Harsh Vardhan</span>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="menu-item" onclick="window.location.href='student-dashboard.html'">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-events.html'">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Events</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-participations.html'">
+                <i class="fas fa-trophy"></i>
+                <span>My Participations</span>
+            </li>
+            <li class="menu-item active">
+                <i class="fas fa-certificate"></i>
+                <span>Certificates</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-profile.html'">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-settings.html'">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="section-title">My Certificates</h1>
+            <div class="filter-controls">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="participation">Participation</button>
+                <button class="filter-btn" data-filter="achievement">Achievement</button>
+                <button class="filter-btn" data-filter="workshop">Workshop</button>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search certificates...">
+        </div>
+
+        <div class="certificates-container">
+            <!-- Achievement Certificate -->
+            <div class="certificate-card" data-type="achievement">
+                <div class="certificate-preview">
+                    <div class="certificate-border">
+                        <div class="certificate-content">
+                            <div class="certificate-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <h3 class="certificate-title">Achievement Certificate</h3>
+                            <p class="certificate-type">1st Prize - Dance Competition</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="certificate-details">
+                    <h3 class="certificate-name">Harsh Vardhan</h3>
+                    <p class="certificate-event">Annual Cultural Fest 2025</p>
+                    <div class="certificate-meta">
+                        <span><i class="far fa-calendar"></i> Issued: 15 Dec 2025</span>
+                        <span><i class="fas fa-hashtag"></i> Cert ID: ANCULT-2025-0125</span>
+                    </div>
+                    <div class="certificate-actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workshop Certificate -->
+            <div class="certificate-card" data-type="workshop">
+                <div class="certificate-preview">
+                    <div class="certificate-border">
+                        <div class="certificate-content">
+                            <div class="certificate-icon">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <h3 class="certificate-title">Workshop Certificate</h3>
+                            <p class="certificate-type">AI & ML Workshop</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="certificate-details">
+                    <h3 class="certificate-name">Harsh Vardhan</h3>
+                    <p class="certificate-event">Department of Computer Science</p>
+                    <div class="certificate-meta">
+                        <span><i class="far fa-calendar"></i> Issued: 10 Dec 2025</span>
+                        <span><i class="fas fa-hashtag"></i> Cert ID: AICERT-2025-0187</span>
+                    </div>
+                    <div class="certificate-actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Participation Certificate -->
+            <div class="certificate-card" data-type="participation">
+                <div class="certificate-preview">
+                    <div class="certificate-border">
+                        <div class="certificate-content">
+                            <div class="certificate-icon">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <h3 class="certificate-title">Participation Certificate</h3>
+                            <p class="certificate-type">24-Hour Hackathon</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="certificate-details">
+                    <h3 class="certificate-name">Harsh Vardhan</h3>
+                    <p class="certificate-event">Code Warriors Team</p>
+                    <div class="certificate-meta">
+                        <span><i class="far fa-calendar"></i> Issued: 25 Nov 2025</span>
+                        <span><i class="fas fa-hashtag"></i> Cert ID: ANHACK-2025-0078</span>
+                    </div>
+                    <div class="certificate-actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workshop Certificate -->
+            <div class="certificate-card" data-type="workshop">
+                <div class="certificate-preview">
+                    <div class="certificate-border">
+                        <div class="certificate-content">
+                            <div class="certificate-icon">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <h3 class="certificate-title">Workshop Certificate</h3>
+                            <p class="certificate-type">Web Development Bootcamp</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="certificate-details">
+                    <h3 class="certificate-name">Harsh Vardhan</h3>
+                    <p class="certificate-event">Department of Computer Science</p>
+                    <div class="certificate-meta">
+                        <span><i class="far fa-calendar"></i> Issued: 15 Oct 2025</span>
+                        <span><i class="fas fa-hashtag"></i> Cert ID: AICERT-2025-0154</span>
+                    </div>
+                    <div class="certificate-actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Display student information from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentName = localStorage.getItem('studentName') || 'Student';
+            document.getElementById('student-name-display').textContent = studentName;
+            
+            // Check if user is actually a student
+            if(localStorage.getItem('isStudent') !== 'true') {
+                alert('Access denied. Please login as student.');
+                window.location.href = 'index.html';
+            }
+
+            // Filter functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.dataset.filter;
+                    
+                    // Update active filter button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Filter certificates
+                    const certificates = document.querySelectorAll('.certificate-card');
+                    certificates.forEach(certificate => {
+                        if (filter === 'all') {
+                            certificate.style.display = 'block';
+                        } else {
+                            if (certificate.dataset.type === filter) {
+                                certificate.style.display = 'block';
+                            } else {
+                                certificate.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const certificates = document.querySelectorAll('.certificate-card');
+                
+                certificates.forEach(certificate => {
+                    const title = certificate.querySelector('.certificate-name').textContent.toLowerCase();
+                    const event = certificate.querySelector('.certificate-event').textContent.toLowerCase();
+                    const type = certificate.querySelector('.certificate-type').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || event.includes(searchTerm) || type.includes(searchTerm)) {
+                        certificate.style.display = 'block';
+                    } else {
+                        certificate.style.display = 'none';
+                    }
+                });
+            });
+
+            // Certificate actions
+            document.addEventListener('click', function(e) {
+                // Download button
+                if (e.target.classList.contains('btn-primary') || 
+                    (e.target.closest('.btn-primary') && e.target.closest('.btn-primary').textContent.includes('Download'))) {
+                    const certificateTitle = e.target.closest('.certificate-card').querySelector('.certificate-type').textContent;
+                    alert(`Certificate for "${certificateTitle}" would be downloaded in PDF format in a real application`);
+                }
+                
+                // Preview button
+                if (e.target.classList.contains('btn-outline') || 
+                    (e.target.closest('.btn-outline') && e.target.closest('.btn-outline').textContent.includes('Preview'))) {
+                    const certificateTitle = e.target.closest('.certificate-card').querySelector('.certificate-type').textContent;
+                    alert(`Would show a preview modal for "${certificateTitle}" in a real application`);
+                }
+            });
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('isStudent');
+            localStorage.removeItem('studentId');
+            localStorage.removeItem('studentName');
+            window.location.href = 'index.html';
+        }
+
+        // Menu item click handler
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                if (this.classList.contains('active')) return;
+                
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

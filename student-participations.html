@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Participations | ANAND ICE Student Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066cc;
+            --secondary: #004080;
+            --accent: #ff6600;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --white: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            height: 40px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 15px;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 250px;
+            height: calc(100vh - 70px);
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 1.5rem 0;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .menu-item i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 70px;
+            padding: 2rem;
+            min-height: calc(100vh - 70px);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .search-bar {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 40px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .participation-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .participation-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .participation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .participation-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .participation-details {
+            padding: 1.5rem;
+        }
+
+        .participation-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .participation-category {
+            display: inline-block;
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        .participation-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .participation-meta i {
+            margin-right: 5px;
+        }
+
+        .participation-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-upcoming {
+            background-color: rgba(255, 165, 0, 0.1);
+            color: orange;
+        }
+
+        .status-completed {
+            background-color: rgba(0, 128, 0, 0.1);
+            color: green;
+        }
+
+        .status-cancelled {
+            background-color: rgba(255, 0, 0, 0.1);
+            color: red;
+        }
+
+        .participation-performance {
+            margin-bottom: 1.5rem;
+        }
+
+        .performance-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .performance-value {
+            font-size: 1.1rem;
+        }
+
+        .participation-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(0, 102, 204, 0.1);
+        }
+
+        .certificate-badge {
+            background-color: rgba(0, 128, 0, 0.1);
+            color: green;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .no-participations {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .no-participations i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .menu-item span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                margin-top: 70px;
+            }
+
+            .main-content {
+                margin-left: 0;
+                margin-top: 0;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .filter-controls {
+                flex-wrap: wrap;
+            }
+
+            .participation-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="https://www.educatly.com/_next/image?url=https://api.educatly.com//rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBNDRSQmc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--56258a48752c8a1073b4495eef6fe6c4951292b8/anand_international_college_of_engineering_profile&w=3840&q=75" 
+             alt="ANAND ICE Logo" class="logo">
+        <div class="user-profile">
+            <div class="user-avatar">HV</div>
+            <span class="user-name" id="student-name-display">Harsh Vardhan</span>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="menu-item" onclick="window.location.href='student-dashboard.html'">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-events.html'">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Events</span>
+            </li>
+            <li class="menu-item active">
+                <i class="fas fa-trophy"></i>
+                <span>My Participations</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-certificates.html'">
+                <i class="fas fa-certificate"></i>
+                <span>Certificates</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-profile.html'">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </li>
+            <li class="menu-item" onclick="window.location.href='student-settings.html'">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="section-title">My Participations</h1>
+            <div class="filter-controls">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+                <button class="filter-btn" data-filter="cancelled">Cancelled</button>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search participations...">
+        </div>
+
+        <div class="participation-container">
+            <!-- Upcoming Participation -->
+            <div class="participation-card" data-status="upcoming">
+                <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                     alt="Hackathon" class="participation-image">
+                <div class="participation-details">
+                    <h3 class="participation-title">24-Hour Hackathon</h3>
+                    <span class="participation-category">Technical</span>
+                    <div class="participation-meta">
+                        <span><i class="far fa-calendar"></i> 22-23 Nov 2025</span>
+                        <span><i class="far fa-clock"></i> 9:00 AM - 9:00 AM</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Computer Lab</span>
+                    </div>
+                    <div class="participation-status">
+                        <span>Status:</span>
+                        <span class="status-badge status-upcoming">Upcoming</span>
+                    </div>
+                    <div class="participation-performance">
+                        <div class="performance-title">Team:</div>
+                        <div class="performance-value">Code Warriors (Team #12)</div>
+                    </div>
+                    <div class="participation-actions">
+                        <button class="btn btn-outline">View Details</button>
+                        <button class="btn btn-outline">Cancel Participation</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Participation -->
+            <div class="participation-card" data-status="completed">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" 
+                     alt="Workshop" class="participation-image">
+                <div class="participation-details">
+                    <h3 class="participation-title">AI & ML Workshop</h3>
+                    <span class="participation-category">Technical</span>
+                    <div class="participation-meta">
+                        <span><i class="far fa-calendar"></i> 5 Dec 2025</span>
+                        <span><i class="far fa-clock"></i> 2:00 PM - 6:00 PM</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Seminar Hall</span>
+                    </div>
+                    <div class="participation-status">
+                        <span>Status:</span>
+                        <span class="status-badge status-completed">Completed</span>
+                    </div>
+                    <div class="participation-performance">
+                        <div class="performance-title">Attendance:</div>
+                        <div class="performance-value">Present (4 hours)</div>
+                    </div>
+                    <div class="participation-actions">
+                        <span class="certificate-badge">
+                            <i class="fas fa-certificate"></i> Certificate Available
+                        </span>
+                        <button class="btn btn-primary">Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Participation with Award -->
+            <div class="participation-card" data-status="completed">
+                <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                     alt="Cultural Fest" class="participation-image">
+                <div class="participation-details">
+                    <h3 class="participation-title">Annual Cultural Fest</h3>
+                    <span class="participation-category">Cultural</span>
+                    <div class="participation-meta">
+                        <span><i class="far fa-calendar"></i> 10-12 Dec 2025</span>
+                        <span><i class="far fa-clock"></i> 9:00 AM - 9:00 PM</span>
+                        <span><i class="fas fa-map-marker-alt"></i> College Ground</span>
+                    </div>
+                    <div class="participation-status">
+                        <span>Status:</span>
+                        <span class="status-badge status-completed">Completed</span>
+                    </div>
+                    <div class="participation-performance">
+                        <div class="performance-title">Achievement:</div>
+                        <div class="performance-value">1st Prize - Dance Competition</div>
+                    </div>
+                    <div class="participation-actions">
+                        <span class="certificate-badge">
+                            <i class="fas fa-trophy"></i> Award Certificate
+                        </span>
+                        <button class="btn btn-primary">Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cancelled Participation -->
+            <div class="participation-card" data-status="cancelled">
+                <img src="https://images.unsplash.com/photo-1543357480-c60d400e7ef6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                     alt="Sports Meet" class="participation-image">
+                <div class="participation-details">
+                    <h3 class="participation-title">Annual Sports Meet</h3>
+                    <span class="participation-category">Sports</span>
+                    <div class="participation-meta">
+                        <span><i class="far fa-calendar"></i> 5-7 Jan 2026</span>
+                        <span><i class="far fa-clock"></i> 8:00 AM - 5:00 PM</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Sports Complex</span>
+                    </div>
+                    <div class="participation-status">
+                        <span>Status:</span>
+                        <span class="status-badge status-cancelled">Cancelled</span>
+                    </div>
+                    <div class="participation-performance">
+                        <div class="performance-title">Reason:</div>
+                        <div class="performance-value">Personal reasons</div>
+                    </div>
+                    <div class="participation-actions">
+                        <button class="btn btn-outline">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Display student information from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentName = localStorage.getItem('studentName') || 'Student';
+            document.getElementById('student-name-display').textContent = studentName;
+            
+            // Check if user is actually a student
+            if(localStorage.getItem('isStudent') !== 'true') {
+                alert('Access denied. Please login as student.');
+                window.location.href = 'index.html';
+            }
+
+            // Filter functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.dataset.filter;
+                    
+                    // Update active filter button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Filter participations
+                    const participations = document.querySelectorAll('.participation-card');
+                    participations.forEach(participation => {
+                        if (filter === 'all') {
+                            participation.style.display = 'block';
+                        } else {
+                            if (participation.dataset.status === filter) {
+                                participation.style.display = 'block';
+                            } else {
+                                participation.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const participations = document.querySelectorAll('.participation-card');
+                
+                participations.forEach(participation => {
+                    const title = participation.querySelector('.participation-title').textContent.toLowerCase();
+                    const category = participation.querySelector('.participation-category').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || category.includes(searchTerm)) {
+                        participation.style.display = 'block';
+                    } else {
+                        participation.style.display = 'none';
+                    }
+                });
+            });
+
+            // Certificate download functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-primary') && 
+                    (e.target.textContent === 'Download' || e.target.closest('.btn-primary'))) {
+                    const eventTitle = e.target.closest('.participation-card').querySelector('.participation-title').textContent;
+                    alert(`Certificate for "${eventTitle}" would be downloaded in a real application`);
+                }
+            });
+
+            // Cancel participation functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-outline') && 
+                    e.target.textContent === 'Cancel Participation') {
+                    if (confirm('Are you sure you want to cancel your participation?')) {
+                        const card = e.target.closest('.participation-card');
+                        card.querySelector('.status-badge').className = 'status-badge status-cancelled';
+                        card.querySelector('.status-badge').textContent = 'Cancelled';
+                        card.querySelector('.participation-performance .performance-title').textContent = 'Reason:';
+                        card.querySelector('.participation-performance .performance-value').textContent = 'Participant request';
+                        
+                        // Remove cancel button
+                        const actionsDiv = card.querySelector('.participation-actions');
+                        actionsDiv.innerHTML = '<button class="btn btn-outline">View Details</button>';
+                        
+                        alert('Participation cancelled successfully');
+                    }
+                }
+            });
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('isStudent');
+            localStorage.removeItem('studentId');
+            localStorage.removeItem('studentName');
+            window.location.href = 'index.html';
+        }
+
+        // Menu item click handler
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                if (this.classList.contains('active')) return;
+                
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

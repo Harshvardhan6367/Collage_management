@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANAND ICE - Login Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066cc;
+            --secondary: #004080;
+            --accent: #ff6600;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --white: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--dark);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            height: 50px;
+        }
+
+        .login-icon {
+            color: var(--primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            margin-top: 80px;
+            background-color: var(--white);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .welcome-section {
+            flex: 1;
+            background: linear-gradient(rgba(0, 102, 204, 0.8), rgba(0, 102, 204, 0.8)), 
+                        url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 3rem;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .college-logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 2rem;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .login-section {
+            flex: 1;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .login-options {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .login-option {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            background-color: var(--light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .login-option.active {
+            background-color: var(--white);
+            border-color: var(--primary);
+            box-shadow: 0 4px 10px rgba(0, 102, 204, 0.1);
+        }
+
+        .login-option i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .login-option h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-option p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .login-form {
+            display: none;
+        }
+
+        .login-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .forgot-password a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                margin-top: 70px;
+            }
+
+            .welcome-section {
+                padding: 2rem;
+            }
+
+            .login-section {
+                padding: 2rem;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .login-title {
+                font-size: 1.5rem;
+            }
+
+            .login-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="https://www.educatly.com/_next/image?url=https://api.educatly.com//rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBNDRSQmc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--56258a48752c8a1073b4495eef6fe6c4951292b8/anand_international_college_of_engineering_profile&w=3840&q=75" 
+             alt="ANAND ICE Logo" class="logo">
+        <div class="login-icon">
+            <i class="fas fa-sign-in-alt"></i>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-section">
+            <img src="https://www.educatly.com/_next/image?url=https://api.educatly.com//rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBNDRSQmc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--56258a48752c8a1073b4495eef6fe6c4951292b8/anand_international_college_of_engineering_profile&w=3840&q=75" 
+                 alt="ANAND ICE Logo" class="college-logo">
+            <h1 class="welcome-title">Welcome to Event Management Portal</h1>
+            <p class="welcome-subtitle">ANAND International College of Engineering</p>
+        </div>
+
+        <div class="login-section">
+            <h2 class="login-title">Login to Your Account</h2>
+            
+            <div class="login-options">
+                <div class="login-option active" onclick="showLoginForm('student')">
+                    <i class="fas fa-user-graduate"></i>
+                    <h3>Student Login</h3>
+                    <p>Access event registrations and participation</p>
+                </div>
+                <div class="login-option" onclick="showLoginForm('management')">
+                    <i class="fas fa-user-tie"></i>
+                    <h3>Management Login</h3>
+                    <p>Manage events and view reports</p>
+                </div>
+            </div>
+
+            <form id="student-login" class="login-form active">
+                <div class="form-group">
+                    <label for="student-id">Student ID</label>
+                    <input type="text" id="student-id" class="form-control" placeholder="Enter your student ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="student-password">Password</label>
+                    <input type="password" id="student-password" class="form-control" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login as Student</button>
+                <div class="forgot-password">
+                    <a href="#">Forgot Password?</a>
+                </div>
+            </form>
+
+            <form id="management-login" class="login-form">
+                <div class="form-group">
+                    <label for="management-email">Email Address</label>
+                    <input type="email" id="management-email" class="form-control" placeholder="Enter your college email" required>
+                </div>
+                <div class="form-group">
+                    <label for="management-password">Password</label>
+                    <input type="password" id="management-password" class="form-control" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login as Management</button>
+                <div class="forgot-password">
+                    <a href="#">Forgot Password?</a>
+                </div>
+            </form>
+
+            <div class="footer">
+                <p>© 2023 ANAND ICE Event Management System. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show the selected login form
+        function showLoginForm(formType) {
+            // Update active tab
+            const options = document.querySelectorAll('.login-option');
+            for (let i = 0; i < options.length; i++) {
+                options[i].classList.remove('active');
+            }
+            event.currentTarget.classList.add('active');
+
+            // Show the selected form
+            document.getElementById('student-login').classList.remove('active');
+            document.getElementById('management-login').classList.remove('active');
+            document.getElementById(`${formType}-login`).classList.add('active');
+        }
+
+        // Student login form submission
+        document.getElementById('student-login').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const studentId = document.getElementById('student-id').value;
+            const password = document.getElementById('student-password').value;
+            
+            // Demo credentials - in real app, validate against database
+            const demoStudentId = "S2023001";
+            const demoPassword = "student123";
+            
+            if(studentId === demoStudentId && password === demoPassword) {
+                // Store login status in localStorage
+                localStorage.setItem('isStudent', 'true');
+                localStorage.setItem('studentId', studentId);
+                localStorage.setItem('studentName', 'Harsh vardhan');
+                
+                // Redirect to student dashboard
+                window.location.href = 'student-dashboard.html';
+            } else {
+                alert('Invalid credentials. Please try again.\n\nDemo credentials:\nStudent ID: S2023001\nPassword: student123');
+            }
+        });
+
+        // Management login form submission
+        document.getElementById('management-login').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('management-email').value;
+            const password = document.getElementById('management-password').value;
+            
+            // Demo credentials - in real app, validate against database
+            const demoEmail = "admin@anandice.edu";
+            const demoPassword = "admin123";
+            
+            if(email === demoEmail && password === demoPassword) {
+                // Store login status in localStorage
+                localStorage.setItem('isManagement', 'true');
+                localStorage.setItem('userEmail', email);
+                
+                // Redirect to management dashboard
+                window.location.href = 'teacher-dashboard.html';
+            } else {
+                alert('Invalid credentials. Please try again.\n\nDemo credentials:\nEmail: admin@anandice.edu\nPassword: admin123');
+            }
+        });
+
+        // Check if already logged in when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            if(localStorage.getItem('isStudent') === 'true') {
+                window.location.href = 'student-dashboard.html';
+            } else if(localStorage.getItem('isManagement') === 'true') {
+                window.location.href = 'teacher-dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

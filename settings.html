@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Event Portal - Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark-color);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-header h3 {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .header h2 {
+            color: var(--dark-color);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        /* Settings Page Styles */
+        .settings-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+        
+        .settings-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .settings-tab.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .settings-tab:hover:not(.active) {
+            color: var(--dark-color);
+        }
+        
+        .settings-content {
+            display: none;
+        }
+        
+        .settings-content.active {
+            display: block;
+        }
+        
+        .settings-section {
+            margin-bottom: 30px;
+        }
+        
+        .settings-section h3 {
+            margin-bottom: 15px;
+            color: var(--dark-color);
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox-group input {
+            margin-right: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .avatar-upload {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 20px;
+            border: 2px solid #eee;
+        }
+        
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-upload-btn {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        .avatar-upload-btn input {
+            position: absolute;
+            font-size: 100px;
+            opacity: 0;
+            right: 0;
+            top: 0;
+            cursor: pointer;
+        }
+        
+        /* Notification Settings */
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notification-info h4 {
+            margin-bottom: 5px;
+        }
+        
+        .notification-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* Danger Zone */
+        .danger-zone {
+            border: 1px solid #fadbd8;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #fdedec;
+        }
+        
+        .danger-zone h4 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+        
+        .danger-zone p {
+            margin-bottom: 15px;
+            color: #666;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>College Event Portal</h3>
+                <p>Teacher Dashboard</p>
+            </div>
+            
+            <div class="sidebar-menu">
+                <ul>
+                    <li><a href="teacher-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="events.html"><i class="fas fa-calendar-alt"></i> Manage Events</a></li>
+                    <li><a href="participation.html"><i class="fas fa-users"></i> Student Participation</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="#" class="active"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="Login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h2>Account Settings</h2>
+                <div class="user-info">
+                    <img src="001vp0.png" alt="User">
+                    <span>Dr. Praveen Agrawal</span>
+                </div>
+            </div>
+            
+            <div class="settings-container">
+                <!-- Settings Tabs -->
+                <div class="settings-tabs">
+                    <div class="settings-tab active" onclick="openTab('profile')">
+                        <i class="fas fa-user"></i> Profile
+                    </div>
+                    <div class="settings-tab" onclick="openTab('account')">
+                        <i class="fas fa-lock"></i> Account
+                    </div>
+                    <div class="settings-tab" onclick="openTab('notifications')">
+                        <i class="fas fa-bell"></i> Notifications
+                    </div>
+                    <div class="settings-tab" onclick="openTab('preferences')">
+                        <i class="fas fa-sliders-h"></i> Preferences
+                    </div>
+                </div>
+                
+                <!-- Profile Settings -->
+                <div id="profile" class="settings-content active">
+                    <div class="settings-section">
+                        <h3>Personal Information</h3>
+                        <div class="avatar-upload">
+                            <div class="avatar-preview">
+                                <img src="001vp.png" alt="Profile" id="avatarPreview">
+                            </div>
+                            <div class="avatar-upload-btn">
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-camera"></i> Change Photo
+                                </button>
+                                <input type="file" id="avatarUpload" accept="image/*" onchange="previewAvatar(event)">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" class="form-control" value="dr. Praveen">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" class="form-control" value="Agrawal">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" class="form-control" value="vp@anandice.ac.in">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" class="form-control" value="+91 123456789">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="department">Department</label>
+                            <select id="department" class="form-control">
+                                <option>Computer Science</option>
+                                <option>Mathematics</option>
+                                <option>Physics</option>
+                                <option>Chemistry</option>
+                                <option>Communication</option>
+                                <option>Human values</option>
+                                <option>BCE</option>
+                                <option>BME</option>
+                                <option>BEE</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bio">Bio</label>
+                            <textarea id="bio" class="form-control" rows="4">Vice-Principle of Anand International Collage of Engineering.</textarea>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+                
+                <!-- Account Settings -->
+                <div id="account" class="settings-content">
+                    <div class="settings-section">
+                        <h3>Password</h3>
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" class="form-control">
+                            <small class="text-muted">Minimum 8 characters with at least one number and one special character</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" class="form-control">
+                        </div>
+                        
+                        <button class="btn btn-primary">
+                            <i class="fas fa-key"></i> Change Password
+                        </button>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Two-Factor Authentication</h3>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="enable2fa" checked>
+                            <label for="enable2fa">Enable two-factor authentication</label>
+                        </div>
+                        <p>Add an extra layer of security to your account by requiring a verification code when logging in.</p>
+                        
+                        <div class="form-group">
+                            <label>Verification Method</label>
+                            <div class="checkbox-group">
+                                <input type="radio" id="smsAuth" name="authMethod" checked>
+                                <label for="smsAuth">SMS Text Message</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="radio" id="appAuth" name="authMethod">
+                                <label for="appAuth">Authenticator App</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Linked Accounts</h3>
+                        <div class="notification-item">
+                            <div>
+                                <i class="fab fa-google" style="color: #DB4437; margin-right: 10px;"></i>
+                                <span>Google</span>
+                            </div>
+                            <button class="btn btn-secondary">Unlink</button>
+                        </div>
+                        <div class="notification-item">
+                            <div>
+                                <i class="fab fa-microsoft" style="color: #0078D7; margin-right: 10px;"></i>
+                                <span>Microsoft</span>
+                            </div>
+                            <button class="btn btn-primary">Link</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notification Settings -->
+                <div id="notifications" class="settings-content">
+                    <div class="settings-section">
+                        <h3>Email Notifications</h3>
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4>Event Announcements</h4>
+                                <p>Receive emails about new events and schedule changes</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4>Participation Updates</h4>
+                                <p>Get notified when students register for your events</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4>Reminders</h4>
+                                <p>Receive reminders before your events start</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Push Notifications</h3>
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4>New Messages</h4>
+                                <p>Notify me about new messages from students</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4>Event Updates</h4>
+                                <p>Alert me about important event updates</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Preferences -->
+                <div id="preferences" class="settings-content">
+                    <div class="settings-section">
+                        <h3>Display Preferences</h3>
+                        <div class="form-group">
+                            <label for="theme">Theme</label>
+                            <select id="theme" class="form-control">
+                                <option>Light</option>
+                                <option>Dark</option>
+                                <option>System Default</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="density">Display Density</label>
+                            <select id="density" class="form-control">
+                                <option>Comfortable</option>
+                                <option>Compact</option>
+                                <option>Spacious</option>
+                            </select>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="animations" checked>
+                            <label for="animations">Enable animations and transitions</label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Event Management Preferences</h3>
+                        <div class="form-group">
+                            <label for="defaultView">Default Events View</label>
+                            <select id="defaultView" class="form-control">
+                                <option>List View</option>
+                                <option>Calendar View</option>
+                                <option>Card View</option>
+                            </select>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="emailConfirm" checked>
+                            <label for="emailConfirm">Send me a confirmation email when I create an event</label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="studentApproval">
+                            <label for="studentApproval">Require my approval for student event registrations</label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section danger-zone">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
+                        <p>These actions are irreversible. Please proceed with caution.</p>
+                        
+                        <div class="form-group">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-file-export"></i> Export All Data
+                            </button>
+                            <small>Download a copy of all your data in the system</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-trash"></i> Delete All My Events
+                            </button>
+                            <small>Permanently remove all events you've created</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button class="btn btn-danger" style="background-color: var(--accent-color);">
+                                <i class="fas fa-user-times"></i> Deactivate Account
+                            </button>
+                            <small>Your account will be disabled but can be reactivated by contacting support</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Settings JavaScript
+        function openTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName('settings-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Remove active class from all tabs
+            const tabs = document.getElementsByClassName('settings-tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            // Show the current tab and mark button as active
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+        
+        function previewAvatar(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('avatarPreview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+        
+        // Initialize tooltips and other UI elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any initialization code here
+        });
+    </script>
+</body>
+</html>
